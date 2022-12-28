@@ -46,6 +46,10 @@ def CreateStore():
         print("tutaj")
         abort(400, message="Bad request. Ensure 'name' and 'address' is included in the JSON payload. ")
     
+    for store in stores.items():
+        if store_data["name"]==store["name"]:
+            abort(400, message="Store already exists.")
+    
     store_id = uuid.uuid4().hex
     
     new_store={
