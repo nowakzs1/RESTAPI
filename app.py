@@ -6,6 +6,7 @@ from db import stores, items
 
 app = Flask(__name__)
 
+#store functions
 @app.get("/stores")
 def GetAllStores():
     return {"Stores": list(stores.values())}
@@ -18,20 +19,6 @@ def GetStoreById(store_id):
         return stores[store_id]
     except KeyError:
         abort(404, message="Store not found.")
-
-
-@app.get("/stores/items")
-def GetAllItems():
-    return {"Items": list(items.values())}
-
-
-@app.get("/stores/items/<string:item_id>")
-def GetItemById(item_id):
-    
-    try:
-        return items[item_id]
-    except KeyError:
-        abort(404, message="Item not found.")
 
 
 @app.post("/stores")
@@ -60,8 +47,33 @@ def CreateStore():
     stores[store_id]=new_store
     return new_store, 201
 
+
+@app.delete("/stores/<string:store_id>")
+def DeleteStoreById(store_id):
     
-@app.post("/items")
+    try:
+        del stores[store_id]
+        return {"message": "Store has been deleted."}
+    except KeyError:
+        abort(404, message="Store not found")
+
+#item functions
+
+@app.get("/stores/items")
+def GetAllItems():
+    return {"Items": list(items.values())}
+
+
+@app.get("/stores/items/<string:item_id>")
+def GetItemById(item_id):
+    
+    try:
+        return items[item_id]
+    except KeyError:
+        abort(404, message="Item not found.")
+
+
+@app.post("/stores/items")
 def CreateItem():
     
     item_data=request.get_json()
@@ -93,7 +105,35 @@ def CreateItem():
     
     items[item_id]=new_item
     return new_item, 201
+
+
+@app.delete("/stores/items/<string:item_id>")
+def DeleteItemById(item_id):
     
+    try:
+        del items[item_id]
+        return {"message": "Item deleted."}
+    except KeyError:
+        abort(404, message="Item not found.")
+
+
+@app.put("/stores/items/<string:item_id>")
+def UpdateAnItem(item_id): # we dont allow user to change "store_id", user can change only "name" and "price" of an item
     
+    new_item_data = request.get_json()
+    
+    if(
+        "name" not in new_item_data
+        or "price" not in new_item_data
+    ):
+        abort(400, message="Bad request. Ensure that 'name' or 'price' are included in the JSON payload.")
+    
+    try:
+        item = items[item_id]
+        item |= new_item_data
+        
+        return item
+    except KeyError:
+        abort(404, message="Item not found.")
     
             

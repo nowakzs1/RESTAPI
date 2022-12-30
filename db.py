@@ -7,6 +7,7 @@ stores={
 }
 items={
     "1":{
+        "item_id": "1",
         "store_id": "1",
         "name": "DefaultItemName",
         "price": "DefaultItemPrice",
