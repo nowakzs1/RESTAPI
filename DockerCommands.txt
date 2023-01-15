@@ -1,0 +1,10 @@
+#Budowanie dockera
+
+docker build -t {nazwa obrazu} .
+
+#Odpalanie Dockera w trybie debugowania 
+docker run -dp 5000:5000 -w /app -v {sciezka do folderu i na koncu ":/app"} {Nazwa obrazu}
+
+#przyklad:
+
+docker run -dp 5000:5000 -w /app -v "C:\filePath\rest-api-project:/app" rest-api-project
