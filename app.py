@@ -30,7 +30,6 @@ def CreateStore():
         "name" not in store_data
         or "address" not in store_data
     ):
-        print("tutaj")
         abort(400, message="Bad request. Ensure 'name' and 'address' is included in the JSON payload. ")
     
     for store in stores.items():
