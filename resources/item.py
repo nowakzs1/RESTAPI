@@ -4,6 +4,7 @@ from flask.views import MethodView
 from flask_smorest import Blueprint, abort
 from db import items
 from db import stores
+from schemas import ItemSchema,ItemUpdateSchema
 
 
 blp = Blueprint("items", __name__, description="Operations on items")
@@ -12,6 +13,7 @@ blp = Blueprint("items", __name__, description="Operations on items")
 @blp.route("/items/<string:item_id>")
 class Item(MethodView):
     
+    @blp.response(200,ItemSchema)
     def get(self, item_id):
         
         try:
@@ -26,15 +28,9 @@ class Item(MethodView):
         except KeyError:
             abort(404, message="Item not found.")
             
-    def put(self, item_id):
-        
-        new_item_data = request.get_json()
-        
-        if(
-            "name" not in new_item_data
-            or "price" not in new_item_data
-        ):
-            abort(400, message="Bad request. Ensure that 'name' or 'price' are included in the JSON payload.")
+    @blp.arguments(ItemUpdateSchema)
+    @blp.response(200,ItemSchema)
+    def put(self, new_item_data, item_id):
         
         try:
             item = items[item_id]
@@ -48,19 +44,13 @@ class Item(MethodView):
 @blp.route("/items")
 class ItemList(MethodView):
     
+    @blp.response(200, ItemSchema(many=True))
     def get(self):
-        return {"Items": list(items.values())}
+        return items.values()
     
-    def post(self):
-        item_data=request.get_json()
-    
-    
-        if (
-            "store_id" not in item_data
-            or "price" not in item_data
-            or "name" not in item_data
-        ):
-            abort(400, message="Bad request. Ensure 'store_id', 'name' and 'price' is included in the JSON payload.")
+    @blp.arguments(ItemSchema)
+    @blp.response(201, ItemSchema)
+    def post(self,item_data):
             
         if item_data["store_id"] not in stores:
             abort(400, message="Store not found. Ensure 'store_id' value is entered correctly.")
@@ -80,4 +70,4 @@ class ItemList(MethodView):
         }
         
         items[item_id]=new_item
-        return new_item, 201
+        return new_item
