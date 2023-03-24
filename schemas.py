@@ -11,7 +11,7 @@ class PlainStoreSchema(Schema):
 
 class PlainTagSchema(Schema):
     id=fields.Int(dump_only=True)
-    name=fields.Str(required=True) # Instruktor nie zrobil tu required=true, nawias jest u niego pusty
+    name=fields.Str(required=True) # Prowadzacy kurs nie zrobil tu required=true, nawias jest u niego pusty
 
 class ItemUpdateSchema(Schema):
     name = fields.Str()
@@ -38,3 +38,8 @@ class TagAndItemSchema(Schema):
     item = fields.Nested(ItemSchema)
     tag = fields.Nested(TagSchema)
     
+class UserSchema(Schema):
+    
+    id = fields.Int( dump_only=True )
+    username = fields.Str(required= True)
+    password = fields.Str(required= True,load_only= True)

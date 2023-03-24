@@ -1,6 +1,7 @@
 import os
 from flask import Flask
 from flask_smorest import Api
+from flask_jwt_extended import JWTManager
 
 from db import db
 import models
@@ -9,6 +10,7 @@ import models
 from resources.store import blp as StoreBlueprint
 from resources.item import blp as ItemBlueprint
 from resources.tag import blp as TagBlueprint
+from resources.user import blp as UserBlueprint
 
 def create_app(db_url=None):
 
@@ -42,6 +44,9 @@ def create_app(db_url=None):
     # inicjalizuje rozszerzenie flask sql alchemy i daje app aby mogl je połączyć
 
     api = Api(app) # connects flask smortest extensions to the flask app
+    
+    app.config["JWT_SECRET_KEY"] = "82955507359750837915888689411803118775"
+    jwt = JWTManager(app)
 
     with app.app_context(): # zanim wykonamy operacje na tabelach tworzymy ja, jesli nie ma juz stworzonych tabeli
         db.create_all() # wie co stworzyc bo ma zaimportowane models
@@ -54,6 +59,7 @@ def create_app(db_url=None):
     api.register_blueprint(ItemBlueprint)
     api.register_blueprint(StoreBlueprint)
     api.register_blueprint(TagBlueprint)
+    api.register_blueprint(UserBlueprint)
     
     return app
 
