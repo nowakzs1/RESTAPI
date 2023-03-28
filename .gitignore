@@ -1,4 +1,8 @@
-#ignore test files
+#ignore files
 test.py
 __pycache__/
 instance/
+.venv
+.vscode
+*.pyc
+.DS_Store
