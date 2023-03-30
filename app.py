@@ -107,9 +107,8 @@ def create_app(db_url=None):
             401,
         )
 
-    #flask-migrate tworzy nam baze danych wiec ponizszych 2 linijek nie potrzebujemy
-    #with app.app_context(): # zanim wykonamy operacje na tabelach tworzymy ja, jesli nie ma juz stworzonych tabeli
-    #    db.create_all() # wie co stworzyc bo ma zaimportowane models
+    with app.app_context(): # zanim wykonamy operacje na tabelach tworzymy ja, jesli nie ma juz stworzonych tabeli
+        db.create_all() # wie co stworzyc bo ma zaimportowane models
      
     # zamiast tego with mozemy uzyc tego:   
     #@app.before_first_request
