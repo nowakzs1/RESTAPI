@@ -3,6 +3,7 @@ from flask import Flask, jsonify
 from flask_smorest import Api
 from flask_jwt_extended import JWTManager
 from blocklist import BLOCKLIST
+from flask_migrate import Migrate
 
 from db import db
 import models
@@ -44,10 +45,16 @@ def create_app(db_url=None):
     db.init_app(app)
     # inicjalizuje rozszerzenie flask sql alchemy i daje app aby mogl je połączyć
 
+    migrate = Migrate(app, db)
+    
     api = Api(app) # connects flask smortest extensions to the flask app
+    
     
     app.config["JWT_SECRET_KEY"] = "82955507359750837915888689411803118775"
     jwt = JWTManager(app)
+    
+    #with app.app_context(): # zanim wykonamy operacje na tabelach tworzymy ja, jesli nie ma juz stworzonych tabeli
+    #    db.create_all() # wie co stworzyc bo ma zaimportowane models
     
     
     @jwt.token_in_blocklist_loader
@@ -104,8 +111,6 @@ def create_app(db_url=None):
             401,
         )
 
-    with app.app_context(): # zanim wykonamy operacje na tabelach tworzymy ja, jesli nie ma juz stworzonych tabeli
-        db.create_all() # wie co stworzyc bo ma zaimportowane models
      
     # zamiast tego with mozemy uzyc tego:   
     #@app.before_first_request
