@@ -4,6 +4,7 @@ from flask_smorest import Api
 from flask_jwt_extended import JWTManager
 from blocklist import BLOCKLIST
 from flask_migrate import Migrate
+from dotenv import load_dotenv
 
 from db import db
 import models
@@ -17,6 +18,8 @@ from resources.user import blp as UserBlueprint
 def create_app(db_url=None):
 
     app = Flask(__name__)
+
+    load_dotenv() # wczytanie pliku .env
 
     app.config["PROPAGATE_EXCEPTIONS"] = True 
     # Jesli jest jakis wyjatek poza naszym app to zebysmy mogli go widziec

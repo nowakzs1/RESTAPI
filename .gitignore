@@ -2,6 +2,7 @@
 test.py
 __pycache__/
 instance/
+.env
 .venv
 .vscode
 *.pyc
